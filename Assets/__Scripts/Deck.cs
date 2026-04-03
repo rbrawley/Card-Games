@@ -17,12 +17,15 @@ public class Deck : MonoBehaviour
 
     private JsonParseDeck jsonDeck;
 
-    static public GameObject SPRITE_PREFAB{ get; private set;}      
+    static public GameObject SPRITE_PREFAB{ get; private set;}   
+
+    /*   
     void Start()
     {
         InitDeck();
         Shuffle(ref cards);
     }
+    */
 
 /// <summary>
 /// Card Games will call InitDeck to set deck and build all 52 objects from 
@@ -65,7 +68,7 @@ public class Deck : MonoBehaviour
                 c = MakeCard(suits[i], j);
                 cards.Add(c);
 
-                //aligns the cards in ros for testing
+                //aligns the cards in rows for testing
                 c.transform.position = 
                 new Vector3 ((j - 7) * 3, (i - 1.5f) * 4, 0);
             }

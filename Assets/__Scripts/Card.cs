@@ -158,5 +158,70 @@ public class Card : MonoBehaviour
         back = _tGO;
     }
 
+    private SpriteRenderer[] spriteRenderers;
 
+    void PopulateSpriteRenderers()
+    {
+        if (spriteRenderers != null) return;
+
+        spriteRenderers = GetComponentsInChildren<SpriteRenderer>();
+    }
+
+/// <summary>
+/// moves the sprites of this card to a specified sorting layer
+/// </summary>
+/// <param name="layerName">Name of the Layer to move to</param>
+    public void SetSpriteSortingLayer(string layerName){
+        PopulateSpriteRenderers();
+
+        foreach(SpriteRenderer srend in spriteRenderers)
+        {
+            srend.sortingLayerName = layerName;
+        }
+    }
+
+    public void SetSortingOrder(int sOrd)
+    {
+        PopulateSpriteRenderers();
+
+        foreach (SpriteRenderer srend in spriteRenderers)
+        {
+            //if the gameObject is this gameobject, set card to bottom layer
+            if (srend.gameObject == this.gameObject)
+            {
+                srend.sortingOrder = sOrd;
+            
+            }
+            //if its the back, set to the highest layer
+            else if (srend.gameObject.name == "back")
+            {
+                srend.sortingOrder = sOrd + 2;
+            }
+            //put inbetween if anything else
+            else
+            {
+                srend.sortingOrder = sOrd + 1;
+            }
+        }
+    }
+
+    virtual public void OnMouseUpAsButton()
+    {
+        print (name);
+    }
+
+    public bool AdjacentTo(Card otherCard, bool wrap = true)
+    {
+        if (!faceUp || !otherCard.faceUp) return false;  //if either are facedown, not a match
+
+        if (Mathf.Abs(rank - otherCard.rank) == 1) return true;
+
+        if (wrap)  //if cards are ace and king, cards are adjacent
+        {
+            if (rank == 1 && otherCard.rank == 13) return true;
+            if (rank == 13 && otherCard.rank == 1) return true;
+        }
+
+        return false;
+    }
 }
