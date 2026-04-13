@@ -16,7 +16,7 @@ public class CardProspector : Card
 
    override public void OnMouseUpAsButton()
    {
-      // base.OnMouseUpAsButton();  //uncomment to call base verson
+       //base.OnMouseUpAsButton();  //uncomment to call base verson
 
       Prospector.CARD_CLICKED(this);
    }

@@ -11,6 +11,8 @@ public class Card : MonoBehaviour
     public string           colS = "Black";  // or "red"  name of color  
     public GameObject       back;  //back of card
     public JsonCard         def;  //card layout as defined in json_deck.json  
+    private UserInput       userInput;
+    
 
     //list for decorators
     public List<GameObject> decoGOs = new List<GameObject>();
@@ -224,4 +226,8 @@ public class Card : MonoBehaviour
 
         return false;
     }
+
+ 
+
+    
 }

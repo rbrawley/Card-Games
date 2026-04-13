@@ -3,7 +3,12 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Deck
+  - Card
+  - Play
+  - Goal
+  - DeckPile
   layers:
   - Default
   - TransparentFX
@@ -52,6 +57,15 @@ TagManager:
     locked: 0
   - name: Row3
     uniqueID: 3065658835
+    locked: 0
+  - name: Row4
+    uniqueID: 2540373379
+    locked: 0
+  - name: Row5
+    uniqueID: 1589574901
+    locked: 0
+  - name: Row6
+    uniqueID: 1869036763
     locked: 0
   - name: Discard
     uniqueID: 612877403

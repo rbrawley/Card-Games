@@ -20,8 +20,8 @@ public class JsonLayout
 public class JsonLayoutSlot: ISerializationCallbackReceiver
 {
     public int      id;
-    public int      x;
-    public int      y;
+    public float      x;
+    public float      y;
     public bool         faceUp;
     public string       layer;
     public string       hiddenByString;
@@ -50,9 +50,9 @@ public class JsonLayoutSlot: ISerializationCallbackReceiver
 [System.Serializable]
 public class JsonLayoutPile
 {
-    public int      x, y;
+    public float      x, y;
     public string       layer;
-    public float        xStagger; //stagger fan cards tot he side for the draw pile
+    public float        xStagger; //stagger fan cards to the side for the draw pile
 }
 
 public class JsonParseLayout: MonoBehaviour
