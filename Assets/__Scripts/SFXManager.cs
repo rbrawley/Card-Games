@@ -42,8 +42,8 @@ public class SFXManager : MonoBehaviour
 
         //assign a random index
         int rand = Random.Range(0, audioClip.Length);
-        //Debug.Log("Length = " + audioClip.Length);
-        //Debug.Log("Rand = " + rand);
+        Debug.Log("Length = " + audioClip.Length);
+        Debug.Log("Rand = " + rand);
 
         //spawn gameobject
         AudioSource audioSource = Instantiate(SFXObject, spawn.position, Quaternion.identity);

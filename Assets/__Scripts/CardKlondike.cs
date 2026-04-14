@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum eCardStateKS{drawpile, table, target, discard}
+public enum eCardStateKS{drawpile, goal, play, discard}
 public class CardKlondike : Card
 {
    [Header("Dynamic: CardKlondike")]

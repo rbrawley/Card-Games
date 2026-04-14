@@ -8,7 +8,12 @@ public class Start : MonoBehaviour{
 
     public void PlayButton()
     {
-        SceneManager.LoadScene("__Scene_0");
+        SceneManager.LoadScene("__Prospector_Scene_0");
+    }
+
+    public void PlayButtonK()
+    {
+        SceneManager.LoadScene("__Klondike_Scene_");
     }
     
 }

@@ -25,7 +25,7 @@ public class Klondike : MonoBehaviour
     public List<CardKlondike> triplesOnDisplay = new List<CardKlondike>();
     public List<List<CardKlondike>> deckTriples = new List<List<CardKlondike>>();
 
-    private Transform layoutAnchor;
+    public Transform kpDiscard;
     private Deck deck;
     private JsonLayout jsonLayout;
 
@@ -99,11 +99,7 @@ public class Klondike : MonoBehaviour
 /// <returns>The top card of drawPile</returns>
     CardKlondike Draw()
     {
-        //Pull card at 0th location and remove it.  TODO currently no protection against over drawing
-        //if (drawPile[0] == null)
-        //{
-            //refill deck with discard
-        //}
+
         CardKlondike kp = drawPile[0];
         drawPile.RemoveAt(0);
         return(kp);
@@ -116,10 +112,10 @@ public class Klondike : MonoBehaviour
     {
         
         //creates empty gameobject to serve as an anchor
-        if(layoutAnchor == null)
+        if(kpDiscard == null)
         {
-            GameObject tGO = new GameObject("_LayoutAnchor");
-            layoutAnchor = tGO.transform;
+            GameObject tGO = new GameObject("_kpDiscard");
+            kpDiscard = tGO.transform;
         }
 
         CardKlondike kp;
@@ -188,10 +184,7 @@ public class Klondike : MonoBehaviour
                     kp.transform.SetParent(playPos[6].transform);
                     break;
             }
-            //make the CardKlondike a child of layout Anchor
-            //kp.transform.SetParent(layoutAnchor);
             
-
             //convert the last char of the layer string to an int
             int z = int.Parse(slot.layer[slot.layer.Length - 1].ToString());
 
@@ -209,7 +202,7 @@ public class Klondike : MonoBehaviour
 
             kp.layoutID = slot.id;
             kp.layoutSlot = slot;
-            kp.state = eCardStateKS.table;
+            kp.state = eCardStateKS.play;
 
             //set the sorting layer of all spriteRenderers on the card
             kp.SetSpriteSortingLayer(slot.layer);
@@ -233,7 +226,7 @@ public class Klondike : MonoBehaviour
         //sets state of card, adds it to discard pile, then updates parent
         kp.state = eCardStateKS.discard;
         discardPile.Add(kp);
-        kp.transform.SetParent(layoutAnchor);
+        kp.transform.SetParent(kpDiscard);
 
         kp.SetLocalPos(new Vector3(
             (jsonLayout.multiplier.x * jsonLayout.discardPile.x)+xOffset,
@@ -247,24 +240,24 @@ public class Klondike : MonoBehaviour
         kp.SetSortingOrder(-200 + (discardPile.Count *3));
     }
 
-/// <summary>
-/// Make kp the new target card
-/// </summary>
-/// <param name="kp">The card klondike to be moved</param>
-    void MoveToTarget(CardKlondike kp)
-    {
-        //if there is a target card, move it to discard
-        if (target != null) MoveToDiscard(target, 0, 0);
+// /// <summary>  TODO DELETE?
+// /// Make kp the new target card
+// /// </summary>
+// /// <param name="kp">The card klondike to be moved</param>
+//     void MoveToTarget(CardKlondike kp)
+//     {
+//         //if there is a target card, move it to discard
+//         if (target != null) MoveToDiscard(target, 0, 0);
 
-        //move target card to correct location
-        MoveToDiscard(kp,0, 0);
+//         //move target card to correct location
+//         MoveToDiscard(kp,0, 0);
 
-        target = kp;
-        kp.state = eCardStateKS.target;
+//         target = kp;
+//         kp.state = eCardStateKS.target;
 
-        kp.SetSpriteSortingLayer("Target");
-        kp.SetSortingOrder(0);
-    }
+//         kp.SetSpriteSortingLayer("Target");
+//         kp.SetSortingOrder(0);
+//     }
 
 /// <summary>
 /// Arranges cards of drawpile to show remaining
@@ -309,7 +302,7 @@ public class Klondike : MonoBehaviour
             {
                 coverkp = tableIdToCardDict[coverID];
                 //if covering card is null or still in table, faceup = false
-                if(coverkp == null || coverkp.state == eCardStateKS.table)
+                if(coverkp == null || coverkp.state == eCardStateKS.play)
                 {
                     faceUp = false;
                 }
@@ -318,34 +311,34 @@ public class Klondike : MonoBehaviour
         }
     }
 
-    static public void CARD_CLICKED(CardKlondike kp)
-    {
-        switch (kp.state)
-        {
-            case eCardStateKS.target: //clicking target does nothing
-                break;
+    // static public void CARD_CLICKED(CardKlondike kp)  TODO REMOVE?
+    // {
+    //     switch (kp.state)
+    //     {
+    //         // case eCardStateKS.target: //clicking target does nothing  TODO DELETE?
+    //         //     break;
 
-            case eCardStateKS.drawpile: //clicking drawpile draws the next card
-                S.MoveToTarget(S.Draw());
-                S.UpdateDrawPile();
-                break;
+    //         case eCardStateKS.drawpile: //clicking drawpile draws the next card
+    //             S.MoveToTarget(S.Draw());
+    //             S.UpdateDrawPile();
+    //             break;
 
-                case eCardStateKS.table:
-                    bool validMatch = true;
+    //             case eCardStateKS.table:
+    //                 bool validMatch = true;
 
-                    if (!kp.faceUp) validMatch = false; //facedown cards can't match
+    //                 if (!kp.faceUp) validMatch = false; //facedown cards can't match
 
-                    if(!kp.AdjacentTo(S.target)) validMatch = false; //must be an adjacent rank
+    //                 if(!kp.AdjacentTo(S.target)) validMatch = false; //must be an adjacent rank
 
-                    if (validMatch)
-                {
-                    S.table.Remove(kp); //if match, remove from table
-                    S.MoveToTarget(kp); //make target card
-                }
-                    S.SetTableFaceUps();
-                    break;
-        }
-    }
+    //                 if (validMatch)
+    //             {
+    //                 S.table.Remove(kp); //if match, remove from table
+    //                 S.MoveToTarget(kp); //make target card
+    //             }
+    //                 S.SetTableFaceUps();
+    //                 break;
+    //     }
+    // }
 
     public void SortDeckIntoTriples()
     {
@@ -391,17 +384,24 @@ public class Klondike : MonoBehaviour
         
         if (deckLocation < triple)
         {
-            //draw 3 cards
+            CardKlondike kp;
             triplesOnDisplay.Clear();
             float xOffset = 2.5f;
             float zOffset = -0.2f;
-            CardKlondike kp;
+
+            if(deckLocation != 0){
+                foreach(CardKlondike card in discardPile)  //moves current triples into one discard stack
+                {
+                    //kp.transform.position(0, 0, zOffset); TODO fix and add
+                }
+            }
+            
 
             foreach(CardKlondike card in deckTriples[deckLocation])
             {
                 kp = Draw();
                 MoveToDiscard(kp, xOffset, zOffset);
-                //TODO ADD
+                kp.state = eCardStateKS.discard;
                 xOffset += 0.5f;
                 zOffset += 0.2f;
                 triplesOnDisplay.Add(kp);
@@ -420,6 +420,7 @@ public class Klondike : MonoBehaviour
         foreach (CardKlondike card in discardPile)
         {
             drawPile.Add(card);
+            card.state = eCardStateKS.drawpile;
             UpdateDrawPile();
         }
         discardPile.Clear();

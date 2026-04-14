@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class VolumeMenu : MonoBehaviour
 {
@@ -31,6 +32,11 @@ public class VolumeMenu : MonoBehaviour
     public void TestSFXButton()
     {
         SFXManager.S.PlayRandomSFX(testClips, transform, 1f);
+    }
+
+    public void QuitButton()
+    {
+        SceneManager.LoadScene("_Start");
     }
 
 }
