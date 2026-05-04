@@ -8,6 +8,12 @@ using UnityEngine.SceneManagement;
 public class Prospector : MonoBehaviour
 {
     private static Prospector S;
+    [SerializeField] private AudioClip[] dealSFX;
+    [SerializeField] private AudioClip[] flipSFX;
+    [SerializeField] private AudioClip shiftSFX;
+
+    [Header("Inscribed")]
+    public float                            roundDelay = 2f;
 
     [Header("Dynamic")]
     public List<CardProspector>              drawPile;
@@ -68,6 +74,7 @@ public class Prospector : MonoBehaviour
     {
         //Pull card at 0th location and remove it.  TODO currently no protection against over drawing
         CardProspector cp = drawPile[0];
+        SFXManager.S.PlayRandomSFX(dealSFX, transform, 1f);
         drawPile.RemoveAt(0);
         return(cp);
     }
@@ -154,6 +161,7 @@ public class Prospector : MonoBehaviour
 
         //move target card to correct location
         MoveToDiscard(cp);
+        SFXManager.S.PlaySFX(S.shiftSFX, transform, 1f);
 
         target = cp;
         cp.state = eCardState.target;
@@ -210,8 +218,51 @@ public class Prospector : MonoBehaviour
                     faceUp = false;
                 }
             }
+            if (faceUp == true && faceUp != cp.faceUp)
+            {
+                SFXManager.S.PlayRandomSFX(flipSFX, transform, 1f);
+            }
             cp.faceUp = faceUp;
+            
         }
+    }
+
+    void CheckForGameOver()
+    {
+        if (mine.Count == 0)
+        {
+            GameOver(true);
+            return;
+        }
+
+        if (drawPile.Count > 0) return;
+
+        foreach (CardProspector cp in mine)
+        {
+            if (target.AdjacentTo(cp)) return;
+        }
+
+        GameOver(false);
+    }
+
+    void GameOver(bool won)
+    {
+        if (won)
+        {
+            ScoreManager.TALLY(eScoreEvent.gameWin);
+        }
+        else
+        {
+            ScoreManager.TALLY(eScoreEvent.gameLoss);        
+        }
+
+        CardSpritesSO.RESET();
+
+        Invoke("ReloadLevel", roundDelay);
+
+        UITextManager.GAME_OVER_UI(won);
+
+        //SceneManager.LoadScene("__Prospector_Scene_0");
     }
 
     static public void CARD_CLICKED(CardProspector cp)
@@ -224,23 +275,31 @@ public class Prospector : MonoBehaviour
             case eCardState.drawpile: //clicking drawpile draws the next card
                 S.MoveToTarget(S.Draw());
                 S.UpdateDrawPile();
+                ScoreManager.TALLY(eScoreEvent.draw);
                 break;
 
-                case eCardState.mine:
-                    bool validMatch = true;
+            case eCardState.mine:
+                bool validMatch = true;
 
-                    if (!cp.faceUp) validMatch = false; //facedown cards can't match
+                if (!cp.faceUp) validMatch = false; //facedown cards can't match
 
-                    if(!cp.AdjacentTo(S.target)) validMatch = false; //must be an adjacent rank
+                if(!cp.AdjacentTo(S.target)) validMatch = false; //must be an adjacent rank
 
-                    if (validMatch)
-                {
-                    S.mine.Remove(cp); //if match, remove from mine
-                    S.MoveToTarget(cp); //make target card
-                }
-                    S.SetMineFaceUps();
-                    break;
+                if (validMatch)
+            {
+                S.mine.Remove(cp); //if match, remove from mine
+                S.MoveToTarget(cp); //make target card            
+                S.SetMineFaceUps();
+                ScoreManager.TALLY(eScoreEvent.mine);
+            }
+                break;
         }
+
+        S.CheckForGameOver();
     }
 
+    void ReloadLevel()
+    {
+        SceneManager.LoadScene("__Prospector_Scene_0");
+    }
 }

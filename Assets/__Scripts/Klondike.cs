@@ -137,12 +137,14 @@ public class Klondike : MonoBehaviour
                     yOffset = 0.3f*Play0.Count;
                     Play0.Add(kp);
                     kp.transform.SetParent(playPos[0].transform);
+                    kp.row = 0;
                     break;
                 case 1:
                 case 7:
                     yOffset = 0.3f*Play1.Count;
                     Play1.Add(kp);
                     kp.transform.SetParent(playPos[1].transform);
+                    kp.row = 1;
                     break;
                 case 2:
                 case 8:
@@ -150,6 +152,7 @@ public class Klondike : MonoBehaviour
                     yOffset = 0.3f*Play2.Count;
                     Play2.Add(kp);
                     kp.transform.SetParent(playPos[2].transform);
+                    kp.row = 2;
                     break;
                 case 3:
                 case 9:
@@ -158,6 +161,7 @@ public class Klondike : MonoBehaviour
                     yOffset = 0.3f*Play3.Count;
                     Play3.Add(kp);
                     kp.transform.SetParent(playPos[3].transform);
+                    kp.row = 3;
                     break;
                 case 4:
                 case 10:
@@ -167,6 +171,7 @@ public class Klondike : MonoBehaviour
                     yOffset = 0.3f*Play4.Count;
                     Play4.Add(kp);
                     kp.transform.SetParent(playPos[4].transform);
+                    kp.row = 4;
                     break;
                 case 5:
                 case 11:
@@ -177,11 +182,13 @@ public class Klondike : MonoBehaviour
                     yOffset = 0.3f*Play5.Count;
                     Play5.Add(kp);
                     kp.transform.SetParent(playPos[5].transform);
+                    kp.row = 5;
                     break;
                 default:
                     yOffset = 0.3f*Play6.Count;
                     Play6.Add(kp);
                     kp.transform.SetParent(playPos[6].transform);
+                    kp.row = 6;
                     break;
             }
             

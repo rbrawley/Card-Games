@@ -12,6 +12,7 @@ public class Card : MonoBehaviour
     public GameObject       back;  //back of card
     public JsonCard         def;  //card layout as defined in json_deck.json  
     private UserInput       userInput;
+    public int              row;
     
 
     //list for decorators

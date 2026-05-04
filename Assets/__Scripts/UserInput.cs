@@ -89,7 +89,10 @@ void Card(GameObject selected)
             else if (slot1 != selected)
             {
                 if (Stackable(selected)){
-                    MoveCard(selected);
+                    _tSRend = slot1.GetComponent<SpriteRenderer>();
+                    _tSRend.color = Color.white;
+                    Stack(selected);
+                    
                 }
                 else
                 {
@@ -154,7 +157,55 @@ void Card(GameObject selected)
         }
         else
         {
-            Transform parentRow = target.transform.parent;
+            
         }
+    }
+
+    void Stack(GameObject selected)
+    {
+        CardKlondike s1 = slot1.GetComponent<CardKlondike>();
+        CardKlondike s2 = selected.GetComponent<CardKlondike>();
+        float yOffset = 0.5f;
+
+        if (s2.state == eCardStateKS.goal || (s2.state != eCardStateKS.goal && s1.rank == 13))
+        {
+            yOffset = 0;
+        }
+
+        slot1.transform.position = new Vector3(selected.transform.position.x,selected.transform.position.y - yOffset, selected.transform.position.z + 1.0f);
+        slot1.transform.parent = selected.transform;  //used to make children move with parents
+
+        if(s1.state == eCardStateKS.discard)
+        {
+            klondike.triplesOnDisplay.Remove(s1);
+            klondike.discardPile.Remove(s1);
+        }
+        else if (s1.state == eCardStateKS.goal && s2.state == eCardStateKS.goal && s1.rank == 1)
+        {
+            //int test = klondike.goalPos.IndexOf(klondike.goalPos, s1.parent.transform);
+            klondike.goalPos[s1.row] = null;
+        }
+        else if (s1.state == eCardStateKS.goal)
+        {
+            klondike.goalPos[s1.row].GetComponent<CardKlondike>().rank = s1.rank - 1;
+        }
+        else // removes the card string from the appropriate list
+        {
+            klondike.play[s1.row].Remove(s1);
+        }
+//
+        s1.row = s2.row;
+        s1.transform.SetParent(s2.transform.parent);
+
+        if (s2.state == eCardStateKS.goal) 
+        {
+            klondike.goalPos[s1.row] = slot1;
+            s1.state  = eCardStateKS.goal;
+        }
+        
+
+        // after completing move reset slot1 to be null as being null will break the logic
+        slot1 = this.gameObject;
+
     }
 }

@@ -8,7 +8,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/_Start.unity
     guid: 2a8868e49b5f8734aa25a63e4910c3d1
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/__Klondike_Scene_.unity
     guid: 1c14d535ad042b946af79e7cd5c0623d
   - enabled: 1
